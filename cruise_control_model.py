@@ -17,7 +17,7 @@ class CruiseControlModel:
                  # success thresholds
                  tol_x: float = 0.1,
                  tol_v: float = 0.1,
-                 done_bonus: float = 200.0):
+                 done_bonus: float = 250.0):
         # time step and bounds
         self.delta = delta
         self.x_bounds = x_bounds
@@ -61,7 +61,7 @@ class CruiseControlModel:
         cost = self.w_x * next_x**2 + self.w_v * next_v**2 + self.w_u * u**2
         reward = -cost
 
-        #check if close to zero
+        # check if close to zero
         done = (abs(next_x) < self.tol_x) and (abs(next_v) < self.tol_v)
         if done:
             reward += self.done_bonus

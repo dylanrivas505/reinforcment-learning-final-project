@@ -11,7 +11,7 @@ class QLearningAgent:
                  alpha: float = 0.1,
                  gamma: float = 0.99,
                  epsilon: float = 1.0,
-                 epsilon_decay: float = 0.995):
+                 epsilon_decay: float = 0.999):
         self.env = env
         self.alpha = alpha
         self.gamma = gamma
@@ -19,10 +19,10 @@ class QLearningAgent:
         self.epsilon_decay = epsilon_decay
         self.actions = action_list
 
-        # build the Q-table: shape = (x_bins, v_bins, n_actions)
+        # build the Q-table (x_bins, v_bins, n_actions)
         self.q_table = np.zeros((num_x_bins, num_v_bins, len(action_list)))
 
-        # precompute bin edges (digitize will give 0..num_bins-1)
+        # precompute bin edges
         self.x_bins = np.linspace(env.x_bounds[0],
                                   env.x_bounds[1],
                                   num_x_bins+1)[1:-1]
@@ -61,7 +61,7 @@ class QLearningAgent:
         target = reward + self.gamma * best_next
         td_error = target - self.q_table[ix, iv, a_idx]
         self.q_table[ix, iv, a_idx] += self.alpha * td_error
-
+    # train
     def train(self,
               episodes: int = 500,
               max_steps: int = 200,

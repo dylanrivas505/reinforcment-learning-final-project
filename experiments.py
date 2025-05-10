@@ -9,16 +9,15 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
     keys = list(param_grid.keys())
     records = []
 
-    # iterate over your three (episodes, max_steps) settings
+    # iterate over three (episodes, max_steps) settings
     for setting in episode_length_settings:
         episodes  = setting['episodes']
         max_steps = setting['max_steps']
 
-        # now the Cartesian product over the *other* hyper-params
+        # now the Cartesian product over hyper parameters
         for vals in itertools.product(*param_grid.values()):
             params = dict(zip(keys, vals))
-
-            # 1) build env
+            # build environment with cruise control model
             env = CruiseControlModel(
                 delta=0.1,
                 x_bounds=(-5,5),
@@ -27,8 +26,7 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
                 tol_x=0.1, tol_v=0.1,
                 done_bonus=200.0
             )
-
-            # 2) build agent with the appropriate action resolution
+            # build agent
             actions = list(np.linspace(-1.0, 1.0, params['action_count']))
             agent = QLearningAgent(
                 env,
@@ -40,22 +38,21 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
                 epsilon=1.0,
                 epsilon_decay=0.999
             )
-
-            # 3) train with the *matched* episodes & max_steps
+            # train with the episodes and max length
             _ = agent.train(
                 episodes=episodes,
                 max_steps=max_steps,
                 init_state=init_state
             )
 
-            # 4) evaluate
+            # evaluate the metrics
             metrics = agent.evaluate(
                 episodes=eval_episodes,
                 max_steps=max_steps,
                 init_state=init_state
             )
 
-            # 5) record everything in one flat dict
+            # Record everything
             record = {
                 'episodes':    episodes,
                 'max_steps':   max_steps,
@@ -63,20 +60,23 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
                 **metrics
             }
             records.append(record)
-
+    # return the df
     return pd.DataFrame(records)
-
+# Experiment form 1.5 of assignment
 if __name__ == "__main__":
     episode_length_settings = [
-        {'episodes': 200,  'max_steps': 200},
-        {'episodes': 400,  'max_steps': 300},
-        {'episodes': 800, 'max_steps': 400},
+        # three different combined settings
+        {'episodes': 100,  'max_steps': 100},
+        {'episodes': 400,  'max_steps': 400},
+        {'episodes': 900, 'max_steps': 900},
     ]
     param_grid = {
-        'num_x_bins':   [11, 21, 51],
-        'num_v_bins':   [11, 21, 51],
-        'action_count': [11, 21, 51],
+        'num_x_bins':   [11, 31, 51],
+        'num_v_bins':   [11, 31, 51],
+        'action_count': [11, 31, 51],
+        # Learning rates
         'alpha':        [0.005, 0.02],
+        # Discount factors
         'gamma':        [0.85, 0.9],
     }
 
