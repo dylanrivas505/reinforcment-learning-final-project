@@ -5,7 +5,6 @@ from q_learning_agent import QLearningAgent
 
 class CruiseControlModel:
     # Cruise Control Environment
-
     def __init__(self,
                  delta: float = 0.1,
                  x_bounds: tuple = (-5.0, 5.0),
@@ -23,15 +22,12 @@ class CruiseControlModel:
         self.x_bounds = x_bounds
         self.v_bounds = v_bounds
         self._t_grid = np.linspace(0, delta, 2)
-
         # reward parameters
         self.w_x, self.w_v, self.w_u = w_x, w_v, w_u
         self.tol_x, self.tol_v = tol_x, tol_v
         self.done_bonus = done_bonus
-
         self.discretizer = None
         self.actions = None
-
         self.state = None
 
     def model(self, s: np.ndarray, t: float, u: float) -> list:
@@ -56,16 +52,13 @@ class CruiseControlModel:
         next_x = np.clip(next_x, *self.x_bounds)
         next_v = np.clip(next_v, *self.v_bounds)
         self.state = np.array([next_x, next_v])
-
         # compute cost function = x² + 0.1·v² + 0.01·u²
         cost = self.w_x * next_x**2 + self.w_v * next_v**2 + self.w_u * u**2
         reward = -cost
-
         # check if close to zero
         done = (abs(next_x) < self.tol_x) and (abs(next_v) < self.tol_v)
         if done:
             reward += self.done_bonus
-
         return self.state, reward, done
 
     def generate_trajectory(self, q_table, s0: tuple, max_steps: int = 200):

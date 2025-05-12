@@ -13,7 +13,6 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
     for setting in episode_length_settings:
         episodes  = setting['episodes']
         max_steps = setting['max_steps']
-
         # now the Cartesian product over hyper parameters
         for vals in itertools.product(*param_grid.values()):
             params = dict(zip(keys, vals))
@@ -44,14 +43,12 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
                 max_steps=max_steps,
                 init_state=init_state
             )
-
             # evaluate the metrics
             metrics = agent.evaluate(
                 episodes=eval_episodes,
                 max_steps=max_steps,
                 init_state=init_state
             )
-
             # Record everything
             record = {
                 'episodes':    episodes,
@@ -62,6 +59,7 @@ def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), e
             records.append(record)
     # return the df
     return pd.DataFrame(records)
+
 # Experiment form 1.5 of assignment
 if __name__ == "__main__":
     episode_length_settings = [

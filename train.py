@@ -30,7 +30,6 @@ def main():
         max_steps=200,
         init_state=(5.0, 0.0)
     )
-
     # Evaluate the performance
     metrics = agent.evaluate(
         episodes=200,

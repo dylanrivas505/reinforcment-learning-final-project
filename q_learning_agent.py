@@ -18,10 +18,8 @@ class QLearningAgent:
         self.epsilon = epsilon
         self.epsilon_decay = epsilon_decay
         self.actions = action_list
-
         # build the Q-table (x_bins, v_bins, n_actions)
         self.q_table = np.zeros((num_x_bins, num_v_bins, len(action_list)))
-
         # precompute bin edges
         self.x_bins = np.linspace(env.x_bounds[0],
                                   env.x_bounds[1],
@@ -61,6 +59,7 @@ class QLearningAgent:
         target = reward + self.gamma * best_next
         td_error = target - self.q_table[ix, iv, a_idx]
         self.q_table[ix, iv, a_idx] += self.alpha * td_error
+        
     # train
     def train(self,
               episodes: int = 500,
@@ -81,11 +80,9 @@ class QLearningAgent:
                 total_r += r
                 if done:
                     break
-
             rewards.append(total_r)
             # decay epsilon
             self.epsilon *= self.epsilon_decay
-
         return rewards
     
     def evaluate(self,
@@ -98,26 +95,21 @@ class QLearningAgent:
         # Temporarily disable exploration
         old_epsilon = self.epsilon
         self.epsilon = 0.0
-
         for _ in range(episodes):
             state = self.env.reset(init_state)
             cum_r = 0.0
-
             for step in range(1, max_steps+1):
                 # Greedy algorithm selection
                 ix, iv = self._discretize(state)
                 a_idx = np.argmax(self.q_table[ix, iv, :])
                 u = self.actions[a_idx]
-
                 next_state, r, done = self.env.step(u)
                 cum_r += r
                 state = next_state
-
                 if done:
                     successes += 1
                     steps_to_success.append(step)
                     break
-
             total_returns.append(cum_r)
         # Restore exploration
         self.epsilon = old_epsilon
