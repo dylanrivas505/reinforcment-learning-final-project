@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from map_solving_environment import GridMapEnvironment
-from q_table_agent import GridQLearningAgent 
+from map_q_agent import MapQLearningAgent 
 
 def run_experiments(maps,
                     episode_length_settings,
@@ -30,7 +30,7 @@ def run_experiments(maps,
                     goal_reward=100.0
                 )
                 # build q-learning agent
-                agent = QLearning(
+                agent = MapQLearningAgent(
                     env,
                     alpha=params['alpha'],
                     gamma=params['gamma'],
@@ -61,18 +61,18 @@ def run_experiments(maps,
 if __name__ == "__main__":
     # 4 matched tiers
     episode_length_settings = [
-        {'episodes': 200, 'max_steps': 100},
-        {'episodes': 400, 'max_steps': 200},
-        {'episodes': 800, 'max_steps': 400},
-        {'episodes': 1000,'max_steps': 800},
+        {'episodes': 10, 'max_steps': 10},
+        {'episodes': 50, 'max_steps': 50},
+        {'episodes': 57, 'max_steps': 57},
+        {'episodes': 100,'max_steps': 100},
     ]
     # 2 learning rates and 2 discounts
     param_grid = {
         'alpha': [0.1, 0.01],
-        'gamma': [0.9, 0.99],
+        'gamma': [0.8, 0.99],
     }
     maps = ["maps/map1.bmp", "maps/map2.bmp"]
     # run and save
     df = run_experiments(maps, episode_length_settings, param_grid)
-    df.to_csv("grid_experiment_results.csv", index=False)
+    df.to_csv("map_experiment_results.csv", index=False)
     print(df)

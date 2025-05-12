@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from cruise_control_model import CruiseControlModel
-from q_learning_agent   import QLearningAgent
+from cc_q_agent import QLearningAgent
 
 def run_experiments(episode_length_settings, param_grid, init_state=(5.0,0.0), eval_episodes=200):
     keys = list(param_grid.keys())

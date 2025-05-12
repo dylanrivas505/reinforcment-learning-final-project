@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import trange
 
-class GridQLearningAgent:
+class MapQLearningAgent:
     def __init__(self,
                  env,
                  alpha: float = 0.1,
@@ -13,6 +13,7 @@ class GridQLearningAgent:
         self.gamma = gamma
         self.epsilon = epsilon
         self.epsilon_decay = epsilon_decay
+        self.epsilon_min = 0.1
 
         # Discrete state dimensionss and action set
         self.n_rows, self.n_cols = env.n_rows, env.n_cols
@@ -63,7 +64,7 @@ class GridQLearningAgent:
                     break
             episode_rewards.append(total_reward)
             # decay exploration
-            self.epsilon *= self.epsilon_decay
+            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
         return episode_rewards
     
     # Q-learning evaluation

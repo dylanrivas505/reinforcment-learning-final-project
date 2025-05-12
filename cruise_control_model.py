@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import odeint
-from q_learning_agent import QLearningAgent
+from cc_q_agent import QLearningAgent
 
 
 class CruiseControlModel:

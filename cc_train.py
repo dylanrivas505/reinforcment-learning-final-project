@@ -1,6 +1,6 @@
 import numpy as np
 from cruise_control_model import CruiseControlModel
-from q_learning_agent import QLearningAgent
+from cc_q_agent import QLearningAgent
 
 def main():
     # Build cruise control environment
