@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from map_solving_environment import GridMapEnvironment
-from q_table_agent import QLearning 
+from q_table_agent import GridQLearningAgent 
 
 def run_experiments(maps,
                     episode_length_settings,
