@@ -72,7 +72,7 @@ if __name__ == "__main__":
         'gamma': [0.8, 0.99],
     }
     maps = ["maps/map1.bmp", "maps/map2.bmp"]
-    # run and save
+    # run and save to new csv
     df = run_experiments(maps, episode_length_settings, param_grid)
     df.to_csv("map_experiment_results.csv", index=False)
     print(df)
